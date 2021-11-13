@@ -1,0 +1,67 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid black;
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+}
+
+.value {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100px;
+    width: 250px;
+    margin: 20px 10px 10px;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.value span {
+    margin-left: 10px;
+}
+
+
+.maxInput {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.maxInput input {
+    margin-left: 40px;
+    width: 100px;
+    text-align: center;
+    background-color: inherit;
+}
+
+
+.minInput{
+    text-align: center;
+}
+.minInput input {
+    margin-left: 40px;
+    width: 100px;
+    text-align: center;
+    background-color: inherit;
+}
+
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    width: 250px;
+    height: 60px;
+    border:1px solid black;
+    border-radius: 10px;
+}
+
+.btn {
+    border: none;
+    font-size: medium;
+    font-weight: bold;
+}
