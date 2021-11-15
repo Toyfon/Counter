@@ -1,46 +1,68 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import {Table} from "./components/Table/Table";
+import {Counter} from "./components/Counter/Counter";
 import {Settings} from "./components/Settings/Settings";
 
 
 function App() {
 
-    const [value, setValue] = useState<number>(0)
 
-    const [maxNumber, setMaxNumber] = useState<number>(5)
-    const [startValue, setStartValue] = useState<number>(0)
+    const [maxValue, setMaxValue] = useState<number>(JSON.parse(localStorage.getItem("maxValue")!))
+    const [startValue, setStartValue] = useState<number>(JSON.parse(localStorage.getItem("startValue")!))
+    const [value, setValue] = useState<number>(+startValue)
+
+    const [isDisabled, setIsDisabled] = useState(true)
+    const [error, setError] = useState<boolean>(false)
+
+
+    useEffect(() => {
+        if (value === maxValue) {
+            setError(true)
+        }
+    }, [startValue])
 
 
     const incrementValue = () => {
-        if (value < maxNumber) {
+        if (value < maxValue) {
             setValue(value + 1)
+            setError(false)
         }
     }
+
+
     const decrementValue = () => {
         if (value > startValue) {
             setValue(value - 1)
+            setError(false)
         }
     }
-    const resetValue = () => setValue(0)
+    const resetValue = () => {
+        setValue(startValue)
+        setError(false)
+    }
 
     return (
         <div className="Wrapper">
             <div className="table">
-                <Table value={value}
-                       maxNumber={maxNumber}
-                       startValue={startValue}
-                       incrementValue={incrementValue}
-                       decrementValue={decrementValue}
-                       resetValue={resetValue}/>
+                <Counter value={value}
+                         maxValue={maxValue}
+                         startValue={startValue}
+                         incrementValue={incrementValue}
+                         decrementValue={decrementValue}
+                         resetValue={resetValue}
+                         isDisabled={isDisabled}
+                         error={error}/>
             </div>
             <div className="settings">
-                <Settings maxNumber={maxNumber}
-                          setMaxNumber={setMaxNumber}
+                <Settings maxValue={maxValue}
+                          setMaxValue={setMaxValue}
                           setValue={setValue}
                           value={value}
                           setStartValue={setStartValue}
-                          startValue={startValue}/>
+                          startValue={startValue}
+                          setIsDisabled={setIsDisabled}
+                          setError={setError}
+                          error={error}/>
             </div>
 
         </div>
