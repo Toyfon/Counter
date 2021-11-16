@@ -1,18 +1,21 @@
 import React, {ChangeEvent, useState} from "react";
 import s from './settings.module.css'
 import {Button} from "../Button/Button";
+import {Input} from "../Input/Input";
 
 
 type SettingsType = {
     maxValue: number
     setMaxValue: (maxNumber: number) => void
     setValue: (value: number) => void
-    value: number
+    value: number | string
     setStartValue: (startValue: number) => void
     startValue: number
-    setIsDisabled: (isDisabled:boolean)=>void
-    setError:(error:boolean)=> void
-    error:boolean
+    setIsDisabled: (isDisabled: boolean) => void
+    setError: (error: boolean) => void
+    error: boolean
+    setDisableBtn: (value: boolean) => void
+    disableBtn: boolean
 }
 
 export const Settings = ({
@@ -23,30 +26,32 @@ export const Settings = ({
                              startValue,
                              setIsDisabled,
                              setError,
-                             error,...props
+                             disableBtn,
+                             setDisableBtn,
+                             error, ...props
                          }: SettingsType) => {
 
-    // const [newMaxValue,setNewMaxValue] = useState(JSON.parse(localStorage.getItem("maxValue")!))
-    // const [newStartValue,setNewStartValue] = useState(JSON.parse(localStorage.getItem("startValue")!))
 
     const callBackHandler = () => {
         setMaxValue(maxValue)
         setStartValue(startValue)
         setValue(startValue)
         setIsDisabled(false)
+        setError(false)
+        setDisableBtn(true)
     }
 
-    const onChangeMaxNumberHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        let maxInputValue = (+e.currentTarget.value)
-            setMaxValue(maxInputValue)
-            setIsDisabled(true)
-            localStorage.setItem('maxValue', JSON.stringify(maxInputValue))
-    }
-    const onChangeStartNumberHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        let startInputValue = (+e.currentTarget.value)
-        setStartValue(startInputValue)
+    const onChangeMaxNumberHandler = (value: number) => {
+        setMaxValue(value)
         setIsDisabled(true)
-        localStorage.setItem('startValue', JSON.stringify(startInputValue))
+        setDisableBtn(false)
+        localStorage.setItem('maxValue', JSON.stringify(value))
+    }
+    const onChangeStartNumberHandler = (value: number) => {
+            setStartValue(value)
+            setIsDisabled(true)
+            setDisableBtn(false)
+            localStorage.setItem('startValue', JSON.stringify(value))
     }
 
     return (
@@ -54,22 +59,27 @@ export const Settings = ({
             <div className={s.value}>
                 <div className={s.maxInput}>
                 <span>max value:
-                <input className={error? s.error : undefined}
-                       type="number"
-                       value={maxValue}
-                       onChange={onChangeMaxNumberHandler}/>
+                    <Input value={maxValue}
+                           callBack={onChangeMaxNumberHandler}
+                           setError={setError}
+                           error={error}
+                    maxValue={maxValue}
+                    startValue={startValue}/>
                 </span>
 
                 </div>
                 <div className={s.minInput}><span>start value:
-                <input type="number"
-                       value={startValue}
-                       onChange={onChangeStartNumberHandler}/>
+                       <Input value={startValue}
+                              callBack={onChangeStartNumberHandler}
+                              setError={setError}
+                              error={error}
+                              maxValue={maxValue}
+                              startValue={startValue}/>
                 </span>
                 </div>
             </div>
             <div className={s.buttons}>
-                <Button classes={s.btn} callBack={callBackHandler} name={'Set'}/>
+                <Button classes={s.btn} callBack={callBackHandler} name={'Set'} disabled={disableBtn}/>
             </div>
         </div>
     )
