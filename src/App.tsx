@@ -4,40 +4,54 @@ import {Counter} from "./components/Counter/Counter";
 import {Settings} from "./components/Settings/Settings";
 
 
-function App() {
+
+const App = () => {
+
+    let initialValue = localStorage.getItem('counterValue')
 
     const [maxValue, setMaxValue] = useState<number>(JSON.parse(localStorage.getItem("maxValue")!))
     const [startValue, setStartValue] = useState<number>(JSON.parse(localStorage.getItem("startValue")!))
-    const [value, setValue] = useState<number | string>("startValue")
+    const [value, setValue] = useState<number | string>(initialValue != null ? +initialValue : 0)
 
     const [isDisabled, setIsDisabled] = useState(true)
     const [error, setError] = useState(false)
-    const [disableBtn, setDisableBtn] = useState(false)
 
-
-    useEffect(() => {
-        debugger
-        if (value === maxValue) {
-            setError(true)
-        }
-    }, [value])
 
 
     const incrementValue = () => {
-        if (value < maxValue) {
+        if (!isNaN(+value) && value < maxValue) {
             setValue(+value + 1)
             setError(false)
         }
     }
-
-
     const resetValue = () => {
         setValue(startValue)
         setError(false)
     }
 
+
+
+    useEffect(() => {
+        if (value === maxValue) {
+            setError(true)
+        }
+    }, [value])
+
+    useEffect(() => {
+        localStorage.setItem('counterValue', JSON.stringify(value))
+    }, [value])
+
+    useEffect(() => {
+        let valueAsString = localStorage.getItem('counterValue')
+        if(valueAsString) {
+            let newValue = JSON.parse(valueAsString)
+            setValue(newValue)
+        }
+    }, [])
+
     return (
         <div className="Wrapper">
+
             <div className="table">
                 <Counter value={value}
                          maxValue={maxValue}
@@ -57,8 +71,6 @@ function App() {
                           setIsDisabled={setIsDisabled}
                           setError={setError}
                           error={error}
-                          disableBtn={disableBtn}
-                          setDisableBtn={setDisableBtn}
                 />
             </div>
         </div>

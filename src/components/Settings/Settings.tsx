@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {useState} from "react";
 import s from './settings.module.css'
 import {Button} from "../Button/Button";
 import {Input} from "../Input/Input";
@@ -14,8 +14,6 @@ type SettingsType = {
     setIsDisabled: (isDisabled: boolean) => void
     setError: (error: boolean) => void
     error: boolean
-    setDisableBtn: (value: boolean) => void
-    disableBtn: boolean
 }
 
 export const Settings = ({
@@ -26,33 +24,36 @@ export const Settings = ({
                              startValue,
                              setIsDisabled,
                              setError,
-                             disableBtn,
-                             setDisableBtn,
                              error, ...props
                          }: SettingsType) => {
 
 
+    const [disableBtn, setDisableBtn] = useState(false)
+
     const callBackHandler = () => {
-        setMaxValue(maxValue)
-        setStartValue(startValue)
+        /*setMaxValue(maxValue)*/
+       /* setStartValue(startValue)*/
         setValue(startValue)
         setIsDisabled(false)
         setError(false)
         setDisableBtn(true)
+        localStorage.setItem('maxValue', JSON.stringify(maxValue))
+        localStorage.setItem('startValue', JSON.stringify(startValue))
     }
 
     const onChangeMaxNumberHandler = (value: number) => {
         setMaxValue(value)
         setIsDisabled(true)
         setDisableBtn(false)
-        localStorage.setItem('maxValue', JSON.stringify(value))
+       /* localStorage.setItem('maxValue', JSON.stringify(value))*/
     }
     const onChangeStartNumberHandler = (value: number) => {
-            setStartValue(value)
-            setIsDisabled(true)
-            setDisableBtn(false)
-            localStorage.setItem('startValue', JSON.stringify(value))
+        setStartValue(value)
+        setIsDisabled(true)
+        setDisableBtn(false)
+      /*  localStorage.setItem('startValue', JSON.stringify(value))*/
     }
+
 
     return (
         <div className={s.container}>
@@ -63,23 +64,25 @@ export const Settings = ({
                            callBack={onChangeMaxNumberHandler}
                            setError={setError}
                            error={error}
-                    maxValue={maxValue}
-                    startValue={startValue}/>
+                           maxValue={maxValue}
+                           startValue={startValue}/>
                 </span>
 
                 </div>
-                <div className={s.minInput}><span>start value:
+                <div className={s.minInput}>
+                    <span>start value:
                        <Input value={startValue}
                               callBack={onChangeStartNumberHandler}
                               setError={setError}
                               error={error}
                               maxValue={maxValue}
-                              startValue={startValue}/>
+                              startValue={startValue}
+                       />
                 </span>
                 </div>
             </div>
             <div className={s.buttons}>
-                <Button classes={s.btn} callBack={callBackHandler} name={'Set'} disabled={disableBtn}/>
+                <Button className={s.btn} onClick={callBackHandler} name={'Set'} disabled={disableBtn}/>
             </div>
         </div>
     )

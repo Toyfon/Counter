@@ -1,19 +1,22 @@
-import React, {ChangeEvent} from "react";
-import s from  "../Settings/settings.module.css"
+import React, {ChangeEvent, DetailedHTMLProps, InputHTMLAttributes} from "react";
+import s from "../Settings/settings.module.css"
 
 
-type InputPropsType = {
+type DefaultInputPropsType = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+
+type InputPropsType = DefaultInputPropsType & {
     value: number
     callBack: (value: number) => void
     setError: (error: boolean) => void
-    error: boolean
+    error?: boolean
     maxValue?: number
     startValue?: number
 }
 
-export const Input = ({
+export const Input: React.FC<InputPropsType> = ({
                           value, callBack,
-                          setError, error, maxValue,startValue, ...props}: InputPropsType) => {
+                          setError, error, maxValue, startValue, ...props
+                      }: InputPropsType) => {
 
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,12 +25,13 @@ export const Input = ({
         setError(false)
     }
 
-const finalInputClass = maxValue === startValue || startValue! < 0? s.inputError : ''
+    const finalInputClass = maxValue === startValue || startValue! < 0 || startValue! > maxValue! ? s.inputError : ''
     return (
         <input className={finalInputClass}
                type="number"
                value={value}
-               onChange={onChangeHandler}/>
+               onChange={onChangeHandler}
+        />
     )
 }
 
